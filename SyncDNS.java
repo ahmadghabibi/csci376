@@ -17,22 +17,7 @@ public class SyncDNS
     public SyncDNS()
     {
     }
-    private String ExtractNewIP(String nslookupResult)
-    {
-      String updatedIp = nslookupResult.substring(8);
-      return updatedIp;
-    }
-    private boolean CompareIP(String oldIP, String newIP)
-    {
-      boolean ipMatch = false;
-      oldIP = oldIP.trim();
-      newIP= newIP.trim();
-      if(oldIP.equals(newIP))
-      {
-         ipMatch = true;
-      }
-       return ipMatch;
-    }
+    
     public void CreateSocketConn(String hostName)throws UnknownHostException, IOException
     {    
       System.setProperty("networkAddress.cache.ttl","30");
@@ -59,9 +44,45 @@ public class SyncDNS
         String res = reply.readLine();
         return res;
    }
-   public boolean VerifyUpdate(String ip,String domainName)throws IOException 
+   /* 
+   private String ExtractNewIP(String nslookupResult)
+    {
+      String updatedIp = nslookupResult.substring(8);
+      return updatedIp;
+    }
+    private boolean CompareIP(String oldIP, String newIP)
+    {
+      boolean ipMatch = false;
+      oldIP = oldIP.trim();
+      newIP= newIP.trim();
+      if(oldIP.equals(newIP))
+      {
+         ipMatch = true;
+      }
+       return ipMatch;
+    }
+       */
+   public boolean VerifyUpdate(String newIp,String domainName)throws IOException 
    {
-    Boolean updateStatus = false;
+
+
+    InetAddress updatedIpAddr = InetAddress.getByName(domainName);
+    String updatedIpAddrStr = updatedIpAddr.toString();
+    int startPos = updatedIpAddrStr.indexOf("/");
+    String updatedIP = updatedIpAddrStr.substring(startPos+1);
+    System.out.println(updatedIP);
+    System.out.println(newIp);
+
+    if(newIp.equals(updatedIP))
+    {
+          return true;
+    }
+    return false;
+
+
+    
+   
+    /* 
     ProcessBuilder builder ;
     Process process;  
     BufferedReader reader ;
@@ -80,7 +101,8 @@ public class SyncDNS
       }
       line = reader.readLine();
     }
-     return updateStatus;
+      */
+    // return updateStatus;
    }
    public static void main (String[] args) throws IOException 
    {
